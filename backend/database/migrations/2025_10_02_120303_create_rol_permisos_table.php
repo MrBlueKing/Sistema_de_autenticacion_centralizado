@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('rol_permisos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('rol_id')->constrained('roles')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('permiso_id')->constrained('permisos')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('rol_id')->constrained('roles')->onDelete('cascade');
+            $table->foreignId('permiso_id')->constrained('permisos')->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['rol_id', 'permiso_id']); // evita duplicar permisos en un rol
+            // Índices
+            $table->index('rol_id');
+            $table->index('permiso_id');
+
+            // Evitar asignaciones duplicadas
+            $table->unique(['rol_id', 'permiso_id'], 'rol_permiso_unique');
         });
     }
 

@@ -47,8 +47,9 @@ return [
     |
     */
 
-    'expiration' => null,
-
+    // Tiempo de expiración de tokens (en minutos, null = nunca expiran)
+    'expiration' => (int) env('SANCTUM_TOKEN_EXPIRATION', null), // 👈 Cambia a 1440 (24h) si quieres expiración
+    
     /*
     |--------------------------------------------------------------------------
     | Token Prefix

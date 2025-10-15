@@ -18,6 +18,7 @@ return new class extends Migration
             $table->tinyInteger('estado')->default(1); // 1 = activo, 0 = inactivo
             $table->decimal('porcentaje_tributacion', 5, 2)->default(0.00);
             $table->timestamp('fecha_creacion')->useCurrent();
+            $table->timestamps();
         });
     }
 

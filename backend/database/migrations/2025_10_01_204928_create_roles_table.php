@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('descripcion', 255)->nullable();
             $table->tinyInteger('estado')->default(1); // activo/inactivo
             $table->timestamps();
+            // Índices
+            $table->index('nombre');
         });
     }
 

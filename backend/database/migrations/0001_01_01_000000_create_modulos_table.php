@@ -11,19 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('permisos', function (Blueprint $table) {
+        Schema::create('modulos', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 100);
             $table->text('descripcion')->nullable();
-            $table->foreignId('modulo_id')->constrained('modulos')->onDelete('cascade');
+            $table->string('url', 255)->nullable()->comment('URL del frontend del módulo');
+            $table->string('icono', 100)->nullable()->comment('Emoji o clase CSS para icono');
+            $table->boolean('estado')->default(true);
             $table->timestamps();
 
             // Índices
             $table->index('nombre');
-            $table->index('modulo_id');
-
-            // Evitar permisos duplicados en el mismo módulo
-            $table->unique(['nombre', 'modulo_id'], 'permiso_modulo_unique');
+            $table->index('estado');
         });
     }
 
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('permisos');
+        Schema::dropIfExists('modulos');
     }
 };

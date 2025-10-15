@@ -13,11 +13,18 @@ return new class extends Migration
     {
         Schema::create('usuario_roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignId('rol_id')->constrained('roles')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('rol_id')->constrained('roles')->onDelete('cascade');
+            $table->foreignId('modulo_id')->constrained('modulos')->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique(['user_id', 'rol_id']); // un usuario no puede tener el mismo rol repetido
+            // Índices
+            $table->index('user_id');
+            $table->index('rol_id');
+            $table->index('modulo_id');
+
+            // Evitar asignaciones duplicadas
+            $table->unique(['user_id', 'rol_id', 'modulo_id'], 'usuario_rol_modulo_unique');
         });
     }
 
