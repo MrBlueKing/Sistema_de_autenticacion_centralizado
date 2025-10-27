@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/ping', function () {
     return response()->json([
         'status' => 'ok',
-        'message' => 'API funcionando correctamente 🚀',
+        'message' => 'API funcionando correctamente en SAC 🚀',
         'timestamp' => now()->toDateTimeString(),
     ]);
 });
@@ -32,7 +32,7 @@ Route::prefix('auth')->group(function () {
 // 🔒 RUTAS PROTEGIDAS (solo auth:sanctum)
 // ========================================
 Route::middleware(['auth:sanctum', 'token.valid'])->group(function () {
-    
+
     Route::get('/ping-token', function () {
         // 🐛 LOG: Este endpoint se ejecutó
         Log::info('🎯 ENDPOINT ping-token ejecutado', [
@@ -63,4 +63,7 @@ Route::middleware(['auth:sanctum', 'token.valid'])->group(function () {
 
     // --- Verificación de permisos ---
     Route::post('/verificar-permiso', [AuthController::class, 'verificarPermiso']);
+
+    // Endpoint para que otros sistemas validen tokens
+    Route::post('/validar-token', [AuthController::class, 'validarToken']);
 });

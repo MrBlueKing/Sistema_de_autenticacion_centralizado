@@ -1,35 +1,51 @@
+// src/components/atoms/Button.jsx
+import PropTypes from 'prop-types';
+
 export default function Button({ 
   children, 
-  variant = 'primary', 
-  size = 'md',
-  disabled = false,
-  onClick,
+  onClick, 
   type = 'button',
-  className = ''
+  variant = 'primary', 
+  disabled = false,
+  fullWidth = false,
+  className = '',
+  ...props 
 }) {
-  const baseStyles = 'font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
-  
   const variants = {
-    primary: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
-    ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-500',
+    primary: 'bg-indigo-600 text-white hover:bg-indigo-700',
+    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300',
+    danger: 'bg-red-600 text-white hover:bg-red-700',
+    ghost: 'bg-transparent text-gray-700 hover:bg-gray-100',
   };
 
-  const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
-  };
+  const baseClasses = [
+    'px-4 py-2 rounded-lg font-medium',
+    'transition-colors duration-200',
+    'disabled:opacity-50 disabled:cursor-not-allowed',
+    variants[variant],
+    fullWidth ? 'w-full' : '',
+    className
+  ].filter(Boolean).join(' ');
 
   return (
     <button
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={baseClasses}
+      {...props}
     >
       {children}
     </button>
   );
 }
+
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  onClick: PropTypes.func,
+  type: PropTypes.oneOf(['button', 'submit', 'reset']),
+  variant: PropTypes.oneOf(['primary', 'secondary', 'danger', 'ghost']),
+  disabled: PropTypes.bool,
+  fullWidth: PropTypes.bool,
+  className: PropTypes.string,
+};

@@ -1,20 +1,15 @@
 import api from './api';
 
 class AuthService {
-  /**
-   * Login de usuario
-   */
   async login(rut, password) {
     try {
       const response = await api.post('/auth/login', { rut, password });
-      
       const { token, user } = response.data;
       
-      // Guardar token y usuario en localStorage
       localStorage.setItem('auth_token', token);
       localStorage.setItem('user', JSON.stringify(user));
       
-      return { success: true, user, token };
+      return { success: true, user };
     } catch (error) {
       return {
         success: false,
@@ -23,87 +18,37 @@ class AuthService {
     }
   }
 
-  /**
-   * Logout
-   */
   async logout() {
     try {
       await api.post('/auth/logout');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('Error logout:', error);
     } finally {
-      // Limpiar localStorage siempre
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('modulos');
+      localStorage.clear();
     }
   }
 
-  /**
-   * Obtener usuario actual
-   */
-  async getCurrentUser() {
-    try {
-      const response = await api.get('/auth/user');
-      return response.data.user;
-    } catch (error) {
-      return null;
-    }
-  }
-
-  /**
-   * Obtener módulos disponibles
-   */
   async getModulos() {
     try {
       const response = await api.get('/modulos');
-      const modulos = response.data.modulos;
-      
-      // Guardar en localStorage para acceso rápido
-      localStorage.setItem('modulos', JSON.stringify(modulos));
-      
-      return modulos;
+      return response.data.modulos;
     } catch (error) {
-      console.error('Error al obtener módulos:', error);
+      console.error('Error módulos:', error);
       return [];
     }
   }
 
-  /**
-   * Verificar si hay sesión activa
-   */
   isAuthenticated() {
-    const token = localStorage.getItem('auth_token');
-    return !!token;
+    return !!localStorage.getItem('auth_token');
   }
 
-  /**
-   * Obtener usuario del localStorage
-   */
   getUser() {
-    const userStr = localStorage.getItem('user');
-    return userStr ? JSON.parse(userStr) : null;
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
   }
 
-  /**
-   * Obtener token
-   */
   getToken() {
     return localStorage.getItem('auth_token');
-  }
-
-  /**
-   * Refrescar token
-   */
-  async refreshToken() {
-    try {
-      const response = await api.post('/auth/refresh');
-      const { token } = response.data;
-      localStorage.setItem('auth_token', token);
-      return true;
-    } catch (error) {
-      return false;
-    }
   }
 }
 

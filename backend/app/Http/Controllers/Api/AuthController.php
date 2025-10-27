@@ -37,7 +37,7 @@ class AuthController extends Controller
         }
 
         // 🔒 Eliminar tokens anteriores
-        $user->tokens()->delete();
+        //  $user->tokens()->delete();
 
         // 🔑 Crear token
         $tokenResult = $user->createToken('auth_token');
@@ -133,6 +133,7 @@ class AuthController extends Controller
                 'id' => $modulo->id,
                 'nombre' => $modulo->nombre,
                 'descripcion' => $modulo->descripcion,
+                'url' => $modulo->url,
                 'roles' => $user->rolesEnModulo($modulo->id)->pluck('nombre'),
                 'permisos' => $user->permisosEnModulo($modulo->id)->pluck('nombre'),
             ];
@@ -204,6 +205,47 @@ class AuthController extends Controller
 
         return response()->json([
             'tiene_permiso' => $tienePermiso
+        ], 200);
+    }
+
+    /**
+     * Validar token para módulos externos
+     */
+    public function validarToken(Request $request)
+    {
+        $request->validate([
+            'modulo_id' => 'required|integer|exists:modulos,id',
+        ]);
+
+        $user = $request->user();
+
+        // Verificar acceso al módulo
+        if (!$user->tieneAccesoAModulo($request->modulo_id)) {
+            return response()->json([
+                'valid' => false,
+                'message' => 'No tienes acceso a este módulo'
+            ], 403);
+        }
+
+        // Obtener roles y permisos del usuario en este módulo
+        $roles = $user->rolesEnModulo($request->modulo_id);
+        $permisos = $user->permisosEnModulo($request->modulo_id);
+
+        return response()->json([
+            'valid' => true,
+            'user' => [
+                'id' => $user->id,
+                'rut' => $user->rut,
+                'nombre' => $user->nombre,
+                'apellido' => $user->apellido,
+                'email' => $user->email,
+                'faena' => $user->faena ? [
+                    'id' => $user->faena->id,
+                    'ubicacion' => $user->faena->ubicacion,
+                ] : null,
+            ],
+            'roles' => $roles->pluck('nombre'),
+            'permisos' => $permisos->pluck('nombre'),
         ], 200);
     }
 }

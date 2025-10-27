@@ -1,30 +1,29 @@
-import { HiArrowRightOnRectangle, HiUser } from 'react-icons/hi2';
-import Button from '../atoms/Button';
+// src/components/organisms/Header.jsx
+import PropTypes from 'prop-types';
+import { Button } from '../atoms';
+import { HeaderProfile } from '../molecules';
+import { HiArrowRightOnRectangle } from 'react-icons/hi2';
 
-export default function Header({ user, onLogout }) {
+export default function Header({ 
+  user,
+  onLogout,
+  className = ''
+}) {
   return (
-    <header className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+    <header className={`bg-white shadow-sm ${className}`}>
+      <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo y nombre */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-              <HiUser className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">
-                Portal de Sistemas
-              </h1>
-              <p className="text-sm text-gray-500">
-                Bienvenido, {user?.nombre} {user?.apellido}
-              </p>
-            </div>
-          </div>
+          {/* Profile Section */}
+          <HeaderProfile 
+            nombre={user.nombre}
+            apellido={user.apellido}
+            title="Portal de Sistemas"
+          />
 
-          {/* Botón logout */}
-          <Button
-            variant="ghost"
+          {/* Logout Button */}
+          <Button 
             onClick={onLogout}
+            variant="ghost"
             className="flex items-center gap-2"
           >
             <HiArrowRightOnRectangle className="w-4 h-4" />
@@ -35,3 +34,12 @@ export default function Header({ user, onLogout }) {
     </header>
   );
 }
+
+Header.propTypes = {
+  user: PropTypes.shape({
+    nombre: PropTypes.string.isRequired,
+    apellido: PropTypes.string.isRequired,
+  }).isRequired,
+  onLogout: PropTypes.func.isRequired,
+  className: PropTypes.string,
+};

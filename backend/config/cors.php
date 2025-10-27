@@ -20,8 +20,8 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        env('FRONTEND_URL', 'http://localhost:5173'), #Frontend sistema de autenticación centralizado
-        env('MODULE_PETROLEO_URL', 'http://localhost:3001'),#Frontend módulo de petróleo
+        'http://localhost:5173',  // Frontend Central
+        'http://localhost:5174',  // Frontend Producción ← IMPORTANTE
     ],
 
     'allowed_origins_patterns' => [],
