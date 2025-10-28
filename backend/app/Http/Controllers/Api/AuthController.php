@@ -36,8 +36,9 @@ class AuthController extends Controller
             ]);
         }
 
-        // 🔒 Eliminar tokens anteriores
-        //  $user->tokens()->delete();
+        // ✅ OPCIÓN B: Eliminar solo tokens EXPIRADOS
+        // (Permite múltiples sesiones activas)
+        $user->tokens()->where('expires_at', '<', now())->delete();
 
         // 🔑 Crear token
         $tokenResult = $user->createToken('auth_token');

@@ -1,4 +1,4 @@
-// src/components/atoms/Logo.jsx
+// src/components/atoms/Logo.jsx (VERSIÓN MEJORADA)
 import PropTypes from 'prop-types';
 
 export default function Logo({ 
@@ -7,30 +7,33 @@ export default function Logo({
   className = '' 
 }) {
   const sizes = {
-    sm: 'w-8 h-8',
-    md: 'w-10 h-10',
-    lg: 'w-16 h-16',
+    sm: 'w-10 h-10',
+    md: 'w-14 h-14',
+    lg: 'w-20 h-20',
   };
 
   const iconSizes = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8',
+    sm: 'w-5 h-5',
+    md: 'w-7 h-7',
+    lg: 'w-10 h-10',
   };
 
   const baseClasses = [
-    'bg-indigo-600 rounded-lg',
+    'bg-gradient-to-br from-orange-500 to-orange-600',
+    'rounded-2xl shadow-lg',
     'flex items-center justify-center',
+    'transform transition-transform hover:scale-105',
+    'border-2 border-orange-400',
     sizes[size],
     className
   ].filter(Boolean).join(' ');
 
-  const iconClasses = ['text-white', iconSizes[size]].join(' ');
+  const iconClasses = ['text-white drop-shadow-md', iconSizes[size]].join(' ');
 
   return (
     <div className={baseClasses}>
       {Icon && <Icon className={iconClasses} />}
-    </div>
+    </div> 
   );
 }
 

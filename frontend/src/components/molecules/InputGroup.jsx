@@ -1,6 +1,6 @@
-// src/components/molecules/InputGroup.jsx
+// src/components/molecules/InputGroup.jsx (VERSIÓN MEJORADA)
 import PropTypes from 'prop-types';
-import Input  from '../atoms/Input';
+import Input from '../atoms/Input';
 
 export default function InputGroup({ 
   label,
@@ -16,15 +16,15 @@ export default function InputGroup({
   return (
     <div className={className}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
           {label}
         </label>
       )}
       
-      <div className="relative">
+      <div className="relative group">
         {Icon && (
-          <Icon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-        )}
+          <Icon className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
+        )}  
         
         <Input
           type={type}
@@ -33,7 +33,7 @@ export default function InputGroup({
           placeholder={placeholder}
           required={required}
           autoComplete={autoComplete}
-          className={Icon ? 'pl-10' : ''}
+          className={Icon ? 'pl-12' : ''}
         />
       </div>
     </div>

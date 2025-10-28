@@ -1,9 +1,11 @@
-// src/pages/Login.jsx (REFACTORIZADO con Arquitectura Atómica)
+// src/pages/Login.jsx (VERSIÓN PROFESIONAL)
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import AuthTemplate  from '../components/templates/AuthTemplate';
-import LoginCard  from '../components/organisms/LoginCard';
+import AuthTemplate from '../components/templates/AuthTemplate';
+import LoginCard from '../components/organisms/LoginCard';
+import logo from '../assets/logo.png';
+import fondo from '../assets/fondominero.jpeg';
 
 export default function Login() {
   // Estado local
@@ -34,7 +36,7 @@ export default function Login() {
 
   // Render
   return (
-    <AuthTemplate>
+    <AuthTemplate backgroundImage={fondo}>
       <LoginCard
         rut={rut}
         setRut={setRut}
@@ -43,6 +45,8 @@ export default function Login() {
         error={error}
         loading={loading}
         onSubmit={handleSubmit}
+        logoUrl={logo}
+        companyName=""
       />
     </AuthTemplate>
   );

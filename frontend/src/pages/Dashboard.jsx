@@ -31,9 +31,9 @@ export default function Dashboard() {
         console.log("URL:", modulo.url);
 
         // Usar la URL del módulo directamente de la BD
-        const url = `${modulo.url}?token=${token}`;
+        const url = `${modulo.url}?token=${token}&modulo_id=${modulo.id}`;
 
-        console.log('🔗 Abriendo módulo:', url); // Para debug
+        console.log('🔗 Abriendo módulo:',url); // Para debug
 
         window.open(url, '_blank');
     };
