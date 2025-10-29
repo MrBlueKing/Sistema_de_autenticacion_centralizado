@@ -1,37 +1,56 @@
+// routes/AppRoutes.jsx - EJEMPLO DE ACTUALIZACIÓN
 import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
-import { useAuth } from '../context/AuthContext';
+import Profile from '../pages/Profile'; // 👈 NUEVO IMPORT
 
-export default function AppRoutes() {
-  const { isAuthenticated, loading } = useAuth();
+// Componente para proteger rutas
+const ProtectedRoute = ({ children }) => {
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <p className="text-gray-600">Cargando...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-600"></div>
       </div>
     );
   }
 
+  return user ? children : <Navigate to="/login" />;
+};
+
+export default function AppRoutes() {
   return (
     <Routes>
-      <Route 
-        path="/" 
-        element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} 
+      {/* Ruta pública */}
+      <Route path="/login" element={<Login />} />
+
+      {/* Rutas protegidas */}
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
       />
-      
-      <Route 
-        path="/login" 
-        element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} 
+
+      {/* 👇 NUEVA RUTA DE PERFIL */}
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
       />
+
+      {/* Ruta por defecto */}
+      <Route path="/" element={<Navigate to="/dashboard" />} />
       
-      <Route 
-        path="/dashboard" 
-        element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" />} 
-      />
-      
-      <Route path="*" element={<Navigate to="/" />} />
+      {/* Ruta 404 */}
+      <Route path="*" element={<Navigate to="/dashboard" />} />
     </Routes>
   );
 }
