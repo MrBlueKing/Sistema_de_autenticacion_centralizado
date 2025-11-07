@@ -1,7 +1,7 @@
 // src/components/molecules/HeaderProfile.jsx
 import PropTypes from 'prop-types';
-import { Avatar } from '../atoms';
-import { HiUser } from 'react-icons/hi2';
+import Avatar from '../atoms/Avatar';
+import { HiUsers } from "react-icons/hi2";
 
 export default function HeaderProfile({ 
   nombre, 
@@ -11,7 +11,7 @@ export default function HeaderProfile({
 }) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      <Avatar icon={HiUser} size="md" />
+      <Avatar icon={HiUsers} size="md" />
       
       <div>
         <h1 className="text-xl font-bold text-gray-900">{title}</h1>

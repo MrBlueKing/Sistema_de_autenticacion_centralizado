@@ -1,5 +1,5 @@
 // Dashboard.jsx - VERSIÓN PROFESIONAL MEJORADA
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     HiArrowRightOnRectangle,
@@ -8,19 +8,35 @@ import {
     HiCube,
     HiUsers,
     HiChartBar,
-    HiArrowTopRightOnSquare
+    HiArrowTopRightOnSquare,
+    HiChevronDown
 } from 'react-icons/hi2';
 import { useAuth } from '../context/AuthContext';
 import authService from '../services/auth';
+import Header from '../components/organisms/Header';
 
 export default function Dashboard() {
     const { user, logout } = useAuth();
     const [modulos, setModulos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         loadModulos();
+    }, []);
+
+    // Cerrar dropdown al hacer click fuera
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
     const loadModulos = async () => {
@@ -56,67 +72,7 @@ export default function Dashboard() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-orange-50">
-            {/* Header Profesional */}
-            <header className="bg-white shadow-md border-b-2 border-orange-500">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        {/* Logo + Title */}
-                        <div className="flex items-center gap-4">
-                            {/* Logo empresarial - puedes cambiarlo por tu logo real */}
-                            <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl blur-md opacity-30"></div>
-                                <div className="relative w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
-                                    <HiShieldCheck className="w-7 h-7 text-white" />
-                                </div>
-                            </div>
-
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900">
-                                    Portal Corporativo
-                                </h1>
-                                <p className="text-sm text-gray-600">
-                                    Sistema de Gestión Minera
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* User Info + Logout */}
-                        <div className="flex items-center gap-4">
-                            {/* User Badge */}
-                            {/* User Badge - VERSIÓN ACTUALIZADA CON NAVEGACIÓN */}
-                            <button
-                                onClick={() => navigate('/profile')}
-                                className="hidden md:flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 hover:border-orange-300 transition-all duration-200 cursor-pointer"
-                            >
-                                <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center">
-                                    <HiUser className="w-5 h-5 text-white" />
-                                </div>
-                                <div>
-                                    <p className="text-sm font-semibold text-gray-900">
-                                        {user?.nombre} {user?.apellido}
-                                    </p>
-                                    <p className="text-xs text-gray-500">
-                                        {user?.faena?.ubicacion || 'Sin faena'}
-                                    </p>
-                                </div>
-                                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-
-                            {/* Logout Button */}
-                            <button
-                                onClick={handleLogout}
-                                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all duration-200 border border-transparent hover:border-red-200"
-                            >
-                                <HiArrowRightOnRectangle className="w-5 h-5" />
-                                <span className="hidden sm:inline font-medium">Cerrar Sesión</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </header>
-
+            <Header />
             {/* Main Content */}
             <main className="max-w-7xl mx-auto px-4 py-8">
                 {/* Welcome Banner */}
@@ -134,52 +90,6 @@ export default function Dashboard() {
                         <p className="text-orange-100 text-lg">
                             Accede a tus módulos y gestiona tu trabajo de forma eficiente
                         </p>
-                    </div>
-                </div>
-
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    {/* Stat 1 */}
-                    <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-orange-500 hover:shadow-lg transition-shadow">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-600 mb-1">Módulos Disponibles</p>
-                                <p className="text-3xl font-bold text-gray-900">{modulos.length}</p>
-                            </div>
-                            <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
-                                <HiCube className="w-7 h-7 text-orange-600" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Stat 2 */}
-                    <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-600 mb-1">Roles Activos</p>
-                                <p className="text-3xl font-bold text-gray-900">
-                                    {modulos.reduce((acc, m) => acc + (m.roles?.length || 0), 0)}
-                                </p>
-                            </div>
-                            <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
-                                <HiUsers className="w-7 h-7 text-blue-600" />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Stat 3 */}
-                    <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-gray-600 mb-1">Faena Asignada</p>
-                                <p className="text-xl font-bold text-gray-900">
-                                    {user?.faena?.ubicacion || 'No asignada'}
-                                </p>
-                            </div>
-                            <div className="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
-                                <HiChartBar className="w-7 h-7 text-green-600" />
-                            </div>
-                        </div>
                     </div>
                 </div>
 

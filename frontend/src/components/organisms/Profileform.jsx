@@ -42,7 +42,7 @@ const ProfileForm = ({ user, onUpdateSuccess }) => {
     try {
       const response = await userService.updateProfile(formData);
       setSuccessMessage(response.message);
-      
+
       // Llamar callback para actualizar el usuario en el contexto
       if (onUpdateSuccess) {
         onUpdateSuccess(response.user);
@@ -62,15 +62,33 @@ const ProfileForm = ({ user, onUpdateSuccess }) => {
   };
 
   return (
-    <ProfileSection 
-      title="Información Personal" 
+    <ProfileSection
+      title="Información Personal"
       description="Actualiza tus datos personales"
       icon={HiUser}
     >
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
+        {/* 
+          Campo username oculto para evitar warning de Chrome
+          Chrome detecta el campo email y cree que es un form de login
+          Agregamos este campo para indicarle que NO es un password form
+        */}
+        <div style={{ display: 'none' }}>
+          <label htmlFor="profile-username">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="profile-username"
+            autoComplete="username"
+            value={user?.rut || ''}
+            onChange={() => { }}
+            tabIndex={-1}
+          />
+        </div>
+
         {/* Mensaje de éxito */}
         {successMessage && (
-          <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+          <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg" role="alert">
             <div className="flex items-center gap-3">
               <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -82,7 +100,7 @@ const ProfileForm = ({ user, onUpdateSuccess }) => {
 
         {/* Error general */}
         {errors.general && (
-          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg" role="alert">
             <p className="text-red-700 font-medium">{errors.general}</p>
           </div>
         )}

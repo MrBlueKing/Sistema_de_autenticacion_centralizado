@@ -166,7 +166,8 @@ const Profile = () => {
 
           {/* Cambio de Contraseña */}
           <div className="lg:col-span-1">
-            <PasswordChangeForm />
+            {/* ⭐ CAMBIO CRÍTICO: Ahora pasamos el user como prop */}
+            <PasswordChangeForm user={user} />
           </div>
         </div>
 

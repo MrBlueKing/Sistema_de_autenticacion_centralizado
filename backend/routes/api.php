@@ -66,4 +66,12 @@ Route::middleware(['auth:sanctum', 'token.valid'])->group(function () {
 
     // Endpoint para que otros sistemas validen tokens
     Route::post('/validar-token', [AuthController::class, 'validarToken']);
+
+    // --- Perfil de Usuario ---
+    Route::prefix('user')->group(function () {
+        Route::get('/profile', [\App\Http\Controllers\Api\UserController::class, 'getProfile']);
+        Route::put('/profile', [\App\Http\Controllers\Api\UserController::class, 'updateProfile']);
+        Route::put('/change-password', [\App\Http\Controllers\Api\UserController::class, 'changePassword']);
+        Route::get('/stats', [\App\Http\Controllers\Api\UserController::class, 'getStats']);
+    });
 });

@@ -7,7 +7,7 @@ import Input from '../atoms/Input';
 import Button from '../atoms/Button';
 import userService from '../../services/userService';
 
-const PasswordChangeForm = () => {
+const PasswordChangeForm = ({ user }) => {
     const [formData, setFormData] = useState({
         current_password: '',
         new_password: '',
@@ -99,6 +99,7 @@ const PasswordChangeForm = () => {
                     type="button"
                     onClick={() => togglePasswordVisibility(field)}
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label={show ? 'Ocultar contraseña' : 'Mostrar contraseña'}
                 >
                     {show ? <HiEyeSlash className="w-5 h-5" /> : <HiEye className="w-5 h-5" />}
                 </button>
@@ -113,15 +114,29 @@ const PasswordChangeForm = () => {
             icon={HiLockClosed}
         >
             <form onSubmit={handleSubmit} className="space-y-6">
-                <input
-                    type="text"
-                    name="username"
-                    autoComplete="username"
-                    style={{ display: 'none' }}
-                />
+                {/* 
+                    CRITICAL: Campo username oculto para accesibilidad
+                    - DEBE estar al INICIO del form (antes de los password fields)
+                    - DEBE tener un VALUE real (email o username del usuario)
+                    - Usa "hidden" attribute en vez de display:none
+                    - Referencia: https://goo.gl/9p2vKq
+                */}
+                <div style={{ display: 'none' }}>
+                    <label htmlFor="password-username">Username</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="password-username"
+                        autoComplete="username"
+                        value={user?.rut || ''}
+                        onChange={() => { }}
+                        tabIndex={-1}
+                    />
+                </div>
+
                 {/* Mensaje de éxito */}
                 {successMessage && (
-                    <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg">
+                    <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-lg" role="alert">
                         <div className="flex items-center gap-3">
                             <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -133,7 +148,7 @@ const PasswordChangeForm = () => {
 
                 {/* Error general */}
                 {errors.general && (
-                    <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg">
+                    <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg" role="alert">
                         <p className="text-red-700 font-medium">{errors.general}</p>
                     </div>
                 )}
@@ -173,7 +188,7 @@ const PasswordChangeForm = () => {
                     value={formData.new_password}
                     show={showPasswords.new}
                     field="new"
-                    autoComplete="current-password"
+                    autoComplete="new-password"
                 />
 
                 {/* Confirmar nueva contraseña */}
