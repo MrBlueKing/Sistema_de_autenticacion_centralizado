@@ -17,8 +17,9 @@ class Faena extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = [                // 👈 AGREGAR
+    protected $fillable = [
         'ubicacion',
+        'color',
         'detalle',
         'estado',
         'porcentaje_tributacion',

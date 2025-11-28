@@ -78,6 +78,7 @@ class AuthController extends Controller
                 'faena' => $user->faena ? [
                     'id' => $user->faena->id,
                     'ubicacion' => $user->faena->ubicacion,
+                    'color' => $user->faena->color,
                 ] : null,
             ],
             'token' => $plainTextToken,
@@ -117,6 +118,7 @@ class AuthController extends Controller
                 'faena' => $user->faena ? [
                     'id' => $user->faena->id,
                     'ubicacion' => $user->faena->ubicacion,
+                    'color' => $user->faena->color,
                 ] : null,
             ]
         ], 200);
@@ -243,6 +245,7 @@ class AuthController extends Controller
                 'faena' => $user->faena ? [
                     'id' => $user->faena->id,
                     'ubicacion' => $user->faena->ubicacion,
+                    'color' => $user->faena->color,
                 ] : null,
             ],
             'roles' => $roles->pluck('nombre'),

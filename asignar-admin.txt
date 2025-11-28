@@ -1,0 +1,50 @@
+INSTRUCCIONES PARA ASIGNAR ROL DE ADMINISTRADOR
+=================================================
+
+1. Abre una terminal en la carpeta backend:
+   cd C:\xampp\htdocs\Sistema_de_autenticacion_centralizado\backend
+
+2. Ejecuta Laravel Tinker:
+   php artisan tinker
+
+3. Copia y pega este código (cambia el RUT por el de tu usuario):
+
+// Buscar tu usuario por RUT (cambia '12345678-9' por tu RUT)
+$user = \App\Models\User::where('rut', '12345678-9')->first();
+
+// Verificar que encontró el usuario
+echo "Usuario encontrado: {$user->nombre} {$user->apellido}\n";
+
+// Buscar el rol de administrador
+$rolAdmin = \App\Models\Rol::where('nombre', 'administrador')->first();
+echo "Rol encontrado: {$rolAdmin->nombre}\n";
+
+// Obtener un módulo cualquiera
+$modulo = \App\Models\Modulo::first();
+echo "Módulo: {$modulo->nombre}\n";
+
+// Verificar si ya tiene el rol
+$yaEsAdmin = DB::table('usuario_roles')
+    ->where('user_id', $user->id)
+    ->where('rol_id', $rolAdmin->id)
+    ->exists();
+
+if ($yaEsAdmin) {
+    echo "¡El usuario ya es administrador!\n";
+} else {
+    // Asignar el rol de administrador
+    DB::table('usuario_roles')->insert([
+        'user_id' => $user->id,
+        'rol_id' => $rolAdmin->id,
+        'modulo_id' => $modulo->id,
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+    echo "¡Rol de administrador asignado exitosamente!\n";
+}
+
+// Verificar
+echo "\nVerificando...\n";
+echo "Es administrador: " . ($user->esAdministrador() ? 'SÍ' : 'NO') . "\n";
+
+4. Para salir de Tinker escribe: exit

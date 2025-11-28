@@ -192,4 +192,32 @@ class User extends Authenticatable
     {
         return $this->modulos()->where('modulos.estado', true)->get();
     }
+
+    /**
+     * Verificar si el usuario es administrador
+     * Un usuario es administrador si tiene el rol 'administrador' en cualquier módulo
+     *
+     * @return bool
+     */
+    public function esAdministrador()
+    {
+        return $this->roles()
+                    ->where('roles.nombre', 'administrador')
+                    ->exists();
+    }
+
+    /**
+     * Verificar si el usuario tiene el rol de administrador en un módulo específico
+     *
+     * @param int|null $moduloId
+     * @return bool
+     */
+    public function esAdministradorEnModulo($moduloId = null)
+    {
+        if ($moduloId === null) {
+            return $this->esAdministrador();
+        }
+
+        return $this->tieneRol('administrador', $moduloId);
+    }
 }

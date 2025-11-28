@@ -28,6 +28,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // ✅ Alias del middleware
         $middleware->alias([
             'token.valid' => \App\Http\Middleware\EnsureTokenIsValid::class,
+            'admin' => \App\Http\Middleware\CheckAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

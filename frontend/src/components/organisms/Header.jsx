@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
 import { HiArrowRightOnRectangle, HiChevronDown, HiUser } from 'react-icons/hi2';
 import { useAuth } from '../../context/AuthContext';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 
 export default function Header() {
   const { user, logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Cerrar dropdown al hacer click fuera
   useEffect(() => {
@@ -82,11 +85,22 @@ export default function Header() {
                     <div className="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center text-white font-bold shadow-md">
                       {getUserInitials()}
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <p className="font-semibold text-gray-900">
                         {user?.nombre} {user?.apellido}
                       </p>
                       <p className="text-xs text-gray-600">{user?.email}</p>
+                      {user?.faena && (
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <div
+                            className="w-2 h-2 rounded-full flex-shrink-0"
+                            style={{ backgroundColor: user.faena.color }}
+                          ></div>
+                          <p className="text-xs text-gray-700 font-medium">
+                            {user.faena.ubicacion}
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -105,6 +119,20 @@ export default function Header() {
                     <HiUser className="w-5 h-5" />
                     <span className="font-medium">Mi Perfil</span>
                   </a>
+                  {location.pathname.startsWith('/admin') && (
+                    <button
+                      onClick={() => {
+                        setDropdownOpen(false);
+                        navigate('/dashboard');
+                      }}
+                      className="w-full px-4 py-2.5 text-left hover:bg-gray-50 flex items-center gap-3 text-gray-700 hover:text-orange-600 transition-colors"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                      </svg>
+                      <span className="font-medium">Volver al Dashboard</span>
+                    </button>
+                  )}
                 </div>
 
                 {/* Logout */}
